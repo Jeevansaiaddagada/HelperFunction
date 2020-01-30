@@ -145,3 +145,17 @@ function Copy-WebConfigs($TargetFolder, $Environment)
 	 }
 	
 }
+
+function Copy-WinServiceConfig($TargetFolder, $Environment)
+{
+	if (Test-Path "$TargetFolder\config")
+    {
+        Copy-Item -Path "$TargetFolder\config\*.config_$Environment" -Destination $TargetFolder -Force -WhatIf
+        Copy-Item -Path "$TargetFolder\config\*.config_$Environment" -Destination $TargetFolder -Force
+        Get-ChildItem "$TargetFolder\*.config_$Environment" |ForEach-Object {
+    		$NewName = $_.Name -replace  "_$Environment", ''
+    		$Destination = Join-Path -Path $_.Directory.FullName -ChildPath $NewName
+    		Move-Item -Path $_.FullName -Destination $Destination -Force
+    }
+    }
+}
