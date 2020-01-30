@@ -1,4 +1,4 @@
-﻿function Install-WindowsService
+function Install-WindowsService
 {
 	$targetFolder = $deployed.targetPath
 	$environment = $deployed.environment
@@ -58,16 +58,19 @@
     $getAllConfigs = Get-ChildItem "$targetFolder\*.config_$environment" -Recurse
     Write-Output "manipulating config files now"
 
-    if (Test-Path "$targetFolder\config")
-    {
-        Copy-Item -Path "$targetFolder\config\*.config_$environment" -Destination $targetFolder -Force -WhatIf
-        Copy-Item -Path "$targetFolder\config\*.config_$environment" -Destination $targetFolder -Force
-        Get-ChildItem "$targetFolder\*.config_$environment" |ForEach-Object {
-    		$NewName = $_.Name -replace  "_$environment", ''
-    		$Destination = Join-Path -Path $_.Directory.FullName -ChildPath $NewName
-    		Move-Item -Path $_.FullName -Destination $Destination -Force
-    }
-    }
+    # if (Test-Path "$targetFolder\config")
+    # {
+    #     Copy-Item -Path "$targetFolder\config\*.config_$environment" -Destination $targetFolder -Force -WhatIf
+    #     Copy-Item -Path "$targetFolder\config\*.config_$environment" -Destination $targetFolder -Force
+    #     Get-ChildItem "$targetFolder\*.config_$environment" |ForEach-Object {
+    # 		$NewName = $_.Name -replace  "_$environment", ''
+    # 		$Destination = Join-Path -Path $_.Directory.FullName -ChildPath $NewName
+    # 		Move-Item -Path $_.FullName -Destination $Destination -Force
+    # }
+	# }
+	
+	Copy-WinServiceConfig $TargetFolder $Environment 
+
     
 	# Start the windows service
 	try
